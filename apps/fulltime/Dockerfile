@@ -10,33 +10,32 @@ ENV NODE_ENV="production"
 
 FROM base AS prod-deps
 
-COPY --link ./package.json ./pnpm-lock.yaml ./
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --frozen-lockfile
+COPY --link pnpm-*.yaml ./
+COPY --link package.json ./
+COPY --link apps/fulltime/package.json ./apps/fulltime/
 
-COPY --link ./web/package.json ./web/
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store cd web && pnpm install --prod --frozen-lockfile
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --frozen-lockfile
 
 FROM base AS build
 
 ARG DATABASE_URL
 ARG PORT
 
-COPY --link ./package.json ./pnpm-lock.yaml ./
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+COPY --link pnpm-*.yaml ./
+COPY --link package.json ./
+COPY --link apps/fulltime/package.json ./apps/fulltime/
 
-COPY --link ./web/package.json ./web/
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store cd web && pnpm install --frozen-lockfile
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 
 COPY --link . .
 
-RUN pnpm run build
-
-RUN find ./web -mindepth 1 ! -regex '^./web/dist\(/.*\)?' -delete
+RUN pnpm --filter fulltime run build
 
 FROM base
 
-COPY --from=build /app/dist /app
-COPY --from=build /app/web/dist /app/web/dist
+COPY --from=build /app/apps/fulltime/dist /app
+COPY --from=build /app/apps/fulltime/web/dist /app/web/dist
+COPY --from=prod-deps /app/node_modules /app/node_modules
 
 EXPOSE 3000
 
