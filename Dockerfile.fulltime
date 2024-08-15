@@ -13,6 +13,7 @@ COPY --link . .
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 
 ENV NODE_ENV="production"
+ARG RENDER_EXTERNAL_URL
 ENV BASE_URL="$RENDER_EXTERNAL_URL"
 ENV VITE_PUBLIC_API_URL="$RENDER_EXTERNAL_URL"
 ARG DATABASE_URL
@@ -24,6 +25,7 @@ RUN pnpm --filter @challenges/fulltime-web run build
 FROM base AS final
 
 ENV NODE_ENV="production"
+ARG RENDER_EXTERNAL_URL
 ENV BASE_URL="$RENDER_EXTERNAL_URL"
 ENV VITE_PUBLIC_API_URL="$RENDER_EXTERNAL_URL"
 ARG DATABASE_URL
