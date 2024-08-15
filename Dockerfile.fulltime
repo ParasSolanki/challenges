@@ -27,7 +27,7 @@ RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 
 COPY --link . .
 
-RUN pnpm --filter fulltime run build
+RUN pnpm --filter apps/fulltime run build
 
 FROM base
 
