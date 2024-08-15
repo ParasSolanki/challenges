@@ -1,0 +1,23 @@
+{
+  "name": "@challenges/intern",
+  "type": "module",
+  "scripts": {
+    "dev": "dotenvx run -- tsx watch api/index.ts",
+    "build": "dotenvx run -f .env.production -- tsx esbuild.config.ts"
+  },
+  "dependencies": {
+    "@hono/node-server": "^1.12.0",
+    "@hono/zod-openapi": "^0.15.3",
+    "@t3-oss/env-core": "^0.11.0",
+    "esbuild": "^0.23.0",
+    "hono": "^4.5.5",
+    "ipx": "^3.0.1",
+    "oslo": "^1.2.1",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@dotenvx/dotenvx": "^1.7.0",
+    "@types/node": "^20.11.17",
+    "tsx": "^4.7.1"
+  }
+}
