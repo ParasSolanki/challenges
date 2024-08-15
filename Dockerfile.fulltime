@@ -6,21 +6,11 @@ RUN corepack enable
 
 WORKDIR /app
 
-FROM base AS prod-deps
-
-COPY --link pnpm-*.yaml ./
-COPY --link package.json ./
-
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --frozen-lockfile
-
 FROM base AS build
 
-COPY --link pnpm-*.yaml ./
-COPY --link package.json ./
 COPY --link . .
 
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
-
 
 ENV NODE_ENV="production"
 
@@ -30,11 +20,11 @@ ARG PORT
 RUN pnpm --filter @challenges/fulltime run build
 RUN pnpm --filter @challenges/fulltime-web run build
 
-FROM base
+FROM base AS final
 
 COPY --from=build /app/apps/fulltime/dist /app
+COPY --from=build /app/apps/fulltime/package.json /app
 COPY --from=build /app/apps/fulltime/web/dist /app/web/dist
-COPY --from=prod-deps /app/node_modules /app/node_modules
 
 EXPOSE 3000
 
