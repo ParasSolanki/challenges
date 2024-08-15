@@ -35,4 +35,6 @@ FROM base
 COPY --from=build /app/dist /app
 COPY --from=build /app/web/dist /app/web/dist
 
-ENTRYPOINT [ "node", "index.js" ]
+EXPOSE 3000
+
+CMD [ "node", "index.js" ]
