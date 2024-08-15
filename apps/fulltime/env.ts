@@ -7,7 +7,9 @@ export const env = createEnv({
    * Will throw if you access these variables on the client.
    */
   server: {
-    PORT: z.coerce.number(z.string({ required_error: "Port is required" })),
+    PORT: z.coerce
+      .number(z.string({ required_error: "Port is required" }))
+      .default(3000),
     DATABASE_URL: z.string({ required_error: "Database url is required" }),
     BASE_URL: z.string({ required_error: "Base url is required" }).min(1).url(),
   },
