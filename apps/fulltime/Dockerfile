@@ -13,15 +13,18 @@ FROM base AS prod-deps
 COPY --link ./package.json ./pnpm-lock.yaml ./
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --frozen-lockfile
 
-COPY --link ./web/package.json ./web/pnpm-lock.yaml ./web/
+COPY --link ./web/package.json ./web/
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store cd web && pnpm install --prod --frozen-lockfile
 
 FROM base AS build
 
+ARG DATABASE_URL
+ARG PORT
+
 COPY --link ./package.json ./pnpm-lock.yaml ./
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 
-COPY --link ./web/package.json ./web/pnpm-lock.yaml ./web/
+COPY --link ./web/package.json ./web/
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store cd web && pnpm install --frozen-lockfile
 
 COPY --link . .
