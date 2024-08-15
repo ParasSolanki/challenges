@@ -4,6 +4,6 @@ services:
   fulltime:
     build:
       context: .
-      dockerfile: apps/fulltime/Dockerfile
+      dockerfile: Dockerfile.fulltime
     ports:
       - "3000:3000"

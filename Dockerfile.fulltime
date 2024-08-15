@@ -12,7 +12,6 @@ FROM base AS prod-deps
 
 COPY --link pnpm-*.yaml ./
 COPY --link package.json ./
-COPY --link apps/fulltime/package.json ./apps/fulltime/
 
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --frozen-lockfile
 
@@ -23,7 +22,6 @@ ARG PORT
 
 COPY --link pnpm-*.yaml ./
 COPY --link package.json ./
-COPY --link apps/fulltime/package.json ./apps/fulltime/
 
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 
