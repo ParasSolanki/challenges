@@ -6,8 +6,6 @@ RUN corepack enable
 
 WORKDIR /app
 
-ENV NODE_ENV="production"
-
 FROM base AS prod-deps
 
 COPY --link pnpm-*.yaml ./
@@ -17,9 +15,6 @@ RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --frozen-l
 
 FROM base AS build
 
-ARG DATABASE_URL
-ARG PORT
-
 COPY --link pnpm-*.yaml ./
 COPY --link package.json ./
 
@@ -27,8 +22,13 @@ RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 
 COPY --link . .
 
+ENV NODE_ENV="production"
+
+ARG DATABASE_URL
+ARG PORT
+
 RUN pnpm --filter apps/fulltime run build
-RUN cd apps/fulltime/web && pnpm build
+RUN cd ./apps/fulltime/web && pnpm build
 
 FROM base
 
